@@ -12,7 +12,7 @@ time.sleep(3)
 mpHands = mp.solutions.hands
 
 #attain the required params
-hands = mpHands.Hands()
+hands = mpHands.Hands(max_num_hands = 1)
 
 #drawing setup
 mpDraw = mp.solutions.drawing_utils
@@ -20,9 +20,17 @@ mpDraw = mp.solutions.drawing_utils
 while True:
     success, img = video.read()
     
+    
 
     #flip frame(inverted camera)
     img = cv2.flip(img, 1)
+    
+    #new game text to open new game tab
+    cv2.putText(img, str("New Game"), (950,100), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 3)
+
+    #title
+    cv2.putText(img, str("Dino Game"), (550,100), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 3)
+
     imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     #process the landmarks(id, x and y coordinates)
     results = hands.process(imgRGB)
@@ -41,9 +49,6 @@ while True:
                 if id == 4 or id == 8:
                     cv2.circle(img, (cx, cy), 10, (255, 0, 255), cv2.FILLED)
             
-            #new game text to open new game tab
-            cv2.putText(img, str("New Game"), (900,100), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,0,255), 1)
-            
             #draw landmarks with connections
             mpDraw.draw_landmarks(img, handslm, mpHands.HAND_CONNECTIONS)
             
@@ -55,7 +60,7 @@ while True:
                 #print(lmList[8])
 
                 #start dino game
-                if x2 >= 950 and y2 <= 95:
+                if x2 >= 1000 and y2 <= 95:
                     #load dino game on new tab if hands are captured 
                     pyautogui.hotkey('command', 't')
                     #time.sleep(1)
@@ -68,9 +73,9 @@ while True:
                 #jumping and running instructions
                 if distance < 40:
                     pyautogui.press('space')
-                    cv2.putText(img, str("Jumping"), (100,100), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,255,255), 1)
+                    cv2.putText(img, str("Jumping"), (150,100), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 3)
                 else:
-                    cv2.putText(img, str("Running"), (100,100), cv2.FONT_HERSHEY_COMPLEX, 0.7, (0,255,255), 1)
+                    cv2.putText(img, str("Running"), (150,100), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,255), 3)
 
     #show image
     cv2.imshow("image", img)
